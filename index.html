@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FinoPico - Software Excellence</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <style>
+      /* === DEFINE THEME COLORS === */
+      :root {
+        --color-primary: #1e88e5;
+        --color-primary-dark: #1565c0;
+        --color-secondary: #00acc1;
+        --color-bg-light: #f5f7fa;
+        --color-bg-dark: #ffffff;
+        --color-text: #2e2e2e;
+      }
+
+      /* Base Reset and Typography */
+      html {
+        scroll-behavior: smooth;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: var(--color-text);
+        background: var(--color-bg-light);
+      }
+
+      /* Overlay for mobile menu */
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 1000;
+      }
+      body.menu-open .overlay {
+        display: block;
+      }
+
+      /* Header & Nav */
+      header {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 20px 0;
+        position: sticky;
+        top: 0;
+        z-index: 1001;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+      .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: auto;
+        position: relative;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+      }
+      .logo img {
+        width: 80px;
+        height: 80px;
+      }
+      .hamburger,
+      .close-menu {
+        display: none;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        z-index: 1003;
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        transition: right 0.3s ease;
+      }
+      nav ul li {
+        margin-left: 25px;
+      }
+      nav ul li a {
+        text-decoration: none;
+        color: var(--color-text);
+        font-weight: 500;
+        transition: color 0.3s;
+      }
+      nav ul li a:hover {
+        color: var(--color-primary);
+      }
+
+      /* Mobile Nav */
+      @media (max-width: 768px) {
+        .hamburger {
+          display: block;
+        }
+        nav.menu-open .hamburger {
+          display: none;
+        }
+        nav.menu-open .close-menu {
+          display: block;
+        }
+        .logo img {
+          width: 60px;
+          height: 60px;
+        }
+        nav ul {
+          position: fixed;
+          top: 0;
+          right: -200px;
+          width: 200px;
+          height: 100%;
+          background: rgba(255, 255, 255, 0.95);
+          flex-direction: column;
+          align-items: flex-start;
+          padding-top: 80px;
+          z-index: 1002;
+        }
+        nav.menu-open ul {
+          right: 0;
+        }
+        nav ul li {
+          margin: 15px 20px;
+        }
+      }
+
+      /* Hero */
+      .hero {
+        background: linear-gradient(135deg, #1e88e5, #00acc1);
+        color: #fff;
+        padding: 60px 20px;
+        text-align: center;
+      }
+      .hero h1 {
+        font-size: 3em;
+        margin-bottom: 10px;
+      }
+      .hero p {
+        font-size: 1.3em;
+      }
+
+      /* Sections */
+      section {
+        padding: 80px 20px;
+        background: var(--color-bg-dark);
+        scroll-margin-top: 100px;
+      }
+      section:nth-of-type(even) {
+        background: var(--color-bg-light);
+      }
+      section h2 {
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 30px;
+        color: var(--color-primary);
+      }
+      .content {
+        max-width: 850px;
+        margin: auto;
+        font-size: 1.1em;
+      }
+
+      /* Grid & Cards */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+      }
+      .card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 25px;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(30, 136, 229, 0.2);
+      }
+
+      /* Icon Styles */
+      .card-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+      .card-icon svg {
+        width: 40px;
+        height: 40px;
+        fill: currentColor;
+        transition: transform 0.3s;
+      }
+      .icon-system svg {
+        color: var(--color-secondary);
+      }
+      .icon-dev svg {
+        color: var(--color-primary-dark);
+      }
+      .icon-consulting svg {
+        color: #ff5722;
+      }
+      .card:hover .card-icon svg {
+        transform: scale(1.1);
+      }
+
+      /* Forms */
+      form {
+        max-width: 650px;
+        margin: auto;
+      }
+      form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+      }
+      form input,
+      form textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1em;
+      }
+      form button {
+        display: block;
+        margin: 0 auto;
+        padding: 12px 36px;
+        font-size: 1.1em;
+        background: var(--color-primary);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      form button:hover {
+        background: var(--color-primary-dark);
+      }
+
+      /* Company Table */
+      #company-info table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      #company-info td {
+        padding: 12px 15px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      #company-info tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* Footer */
+      footer {
+        text-align: center;
+        padding: 30px 20px;
+        background: var(--color-bg-light);
+        color: var(--color-text);
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="overlay" id="overlay"></div>
+    <header>
+      <div class="container">
+        <nav id="nav">
+          <div class="logo">
+            <a href="#hero">
+              <img src="logo.svg" width="80" height="80" alt="FinoPico Logo" />
+            </a>
+          </div>
+          <button class="hamburger" id="hamburger">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M3 6h18M3 12h18M3 18h18"
+                stroke="#333"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+          <button class="close-menu" id="close-menu">
+            <svg viewBox="0 0 24 24">
+              <line
+                x1="4"
+                y1="4"
+                x2="20"
+                y2="20"
+                stroke="#333"
+                stroke-width="2"
+              />
+              <line
+                x1="20"
+                y1="4"
+                x2="4"
+                y2="20"
+                stroke="#333"
+                stroke-width="2"
+              />
+            </svg>
+          </button>
+          <ul id="nav-menu">
+            <li><a href="#about">About</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#company-info">Company</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero" id="hero">
+      <div class="container">
+        <h1>FinoPico</h1>
+        <p>Exquisite Software Crafting for Web-Based Applications</p>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container content">
+        <h2>About Us</h2>
+        <p>
+          FinoPico embodies the spirit of refinement and meticulous detail. Our
+          name blends "Fino" (elegance) with "Pico" (smallest scale), reflecting
+          our belief that even the tiniest elements deserve the utmost care.<br />
+          We design and build software solutions with obsessive attention to
+          detail, where craftsmanship is our core philosophy.
+        </p>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container content">
+        <h2>Our Services</h2>
+        <div class="grid">
+          <!-- System Design -->
+          <div class="card">
+            <div class="card-icon icon-system">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M4 4h16v4H4V4zm0 6h16v4H4v-4zm0 6h16v4H4v-4z"
+                />
+              </svg>
+            </div>
+            <h3>System Design</h3>
+            <p>
+              Designing scalable and maintainable systems — including databases,
+              architectures, and APIs.
+            </p>
+          </div>
+          <!-- Web Development -->
+          <div class="card">
+            <div class="card-icon icon-dev">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="12" fill="currentColor" />
+                <rect x="8" y="18" width="8" height="2" fill="currentColor" />
+              </svg>
+            </div>
+            <h3>Web Development</h3>
+            <p>
+              Building custom web applications tailored to your business goals.
+            </p>
+          </div>
+          <!-- Technical Consulting -->
+          <div class="card">
+            <div class="card-icon icon-consulting">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zM8 11c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5s-3 1.34-3 3 1.34 3 3 3zM8 13c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.04 2.28.94 3.97 2.56 3.97 4.46V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
+                />
+              </svg>
+            </div>
+            <h3>Technical Consulting</h3>
+            <p>
+              Advising on system scalability, performance, and engineering best
+              practices.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="company-info">
+      <div class="container content">
+        <h2>Company Information</h2>
+        <table>
+          <tr>
+            <td>Company Name</td>
+            <td>FinoPico</td>
+          </tr>
+          <tr>
+            <td>Established</td>
+            <td>2025</td>
+          </tr>
+          <tr>
+            <td>Location</td>
+            <td>Ho Chi Minh City, Vietnam</td>
+          </tr>
+          <tr>
+            <td>Business Description</td>
+            <td>
+              Providing design, development, and consulting services for web
+              applications, systems, and digital solutions
+            </td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container content">
+        <h2>Contact Us</h2>
+        <form id="contactForm">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Your name"
+            required
+          />
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Your email"
+            required
+          />
+          <label for="message">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            placeholder="Your message"
+            rows="5"
+            required
+          ></textarea>
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </section>
+
+    <script>
+      const nav = document.getElementById("nav");
+      const hamburger = document.getElementById("hamburger");
+      const closeBtn = document.getElementById("close-menu");
+      const overlay = document.getElementById("overlay");
+      const links = document.querySelectorAll("#nav-menu a");
+      function openMenu() {
+        nav.classList.add("menu-open");
+        document.body.classList.add("menu-open");
+      }
+      function closeMenu() {
+        nav.classList.remove("menu-open");
+        document.body.classList.remove("menu-open");
+      }
+      hamburger.addEventListener("click", openMenu);
+      closeBtn.addEventListener("click", closeMenu);
+      overlay.addEventListener("click", closeMenu);
+      links.forEach((link) => link.addEventListener("click", closeMenu));
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const name = document.getElementById("name").value;
+          const email = document.getElementById("email").value;
+          const message = document.getElementById("message").value;
+          const subject = encodeURIComponent("Contact from " + name);
+          const body = encodeURIComponent(
+            `Name: ${name}\nEmail: ${email}\nMessage: ${message}`
+          );
+          window.location.href = `mailto:finopico.com@gmail.com?subject=${subject}&body=${body}`;
+        });
+    </script>
+
+    <footer>
+      <p>&copy; 2025 FinoPico. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
